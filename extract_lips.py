@@ -1,18 +1,11 @@
 import face_recognition
-# from imutils import face_utils
-# import numpy as np
-# import argparse
-# import imutils
-# import dlib
-# import cv2
-# from scipy import misc
 import imageio
 
 margin = 30
 maxWidth = 0
 maxHeight = 0
 
-image = face_recognition.load_image_file("will.jpg")
+image = face_recognition.load_image_file("greg.jpg")
 face_landmarks_list = face_recognition.face_landmarks(image)
 
 if(len(face_landmarks_list) >= 1):
@@ -40,8 +33,8 @@ if(len(face_landmarks_list) >= 1):
     if(xMax-xMin > maxWidth):
         maxWidth = xMax-xMin
 
-    arr = imageio.imread("will.jpg")
-    imageio.imsave("will_mouth.jpg",
+    arr = imageio.imread("greg.jpg")
+    imageio.imsave("greg_mouth.jpg",
                    arr[yMin-margin:yMax+margin, xMin-margin:xMax+margin])
     print("FINISHED IMAGE. Maximum dimensions are " +
           str(maxWidth)+" x "+str(maxHeight))
