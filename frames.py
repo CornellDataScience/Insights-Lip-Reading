@@ -2,6 +2,8 @@
 import cv2
 import os
 
+# video = ""
+# Make a folder dependent on the name of each video
 # Read the video from specified path
 cam = cv2.VideoCapture("test.mp4")
 
