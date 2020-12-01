@@ -45,25 +45,30 @@ public class Gui extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JButton btnNewButton = new JButton("Capture");
-		btnNewButton.setBounds(223, 231, 89, 23);
+
+		JButton btnNewButton = new JButton();
+		btnNewButton.setText("<html><center>" + "Capture" + "</center></html>");
+		btnNewButton.setBounds(223, 231, 89, 33);
 		contentPane.add(btnNewButton);
-		
-		JButton btnNewButton_1 = new JButton("Read Lips");
+
+		JButton btnNewButton_1 = new JButton();
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		btnNewButton_1.setBounds(25, 231, 89, 23);
+		btnNewButton_1.setText("<html><center>" + "Read Lips" + "</center></html>");
+		btnNewButton_1.setBounds(25, 231, 89, 33);
 		contentPane.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("Load File");
-		btnNewButton_2.setBounds(322, 231, 89, 23);
+
+		JButton btnNewButton_2 = new JButton();
+		btnNewButton_2.setText("<html><center>" + "Load File" + "</center></html>");
+		btnNewButton_2.setBounds(322, 231, 89, 33);
 		contentPane.add(btnNewButton_2);
-		
-		JButton btnNewButton_3 = new JButton("Crop Lips");
-		btnNewButton_3.setBounds(124, 231, 89, 23);
+
+		JButton btnNewButton_3 = new JButton();
+		btnNewButton_3.setText("<html><center>" + "Crop Lips" + "</center></html>");
+		btnNewButton_3.setBounds(124, 231, 89, 33);
+
 		contentPane.add(btnNewButton_3);
 	}
 }
