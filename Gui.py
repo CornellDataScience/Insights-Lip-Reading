@@ -2,7 +2,8 @@ import tkinter
 from tkinter import *
 from tkinter import Tk, Label, Button, LEFT, RIGHT
 
-
+# rewrite extract_lips.py to not use face_recognition
+# check if certain emotions often get switched from what they should be
 def capture():
     print("hello") #the webcam stuff
 def crop_lips():
