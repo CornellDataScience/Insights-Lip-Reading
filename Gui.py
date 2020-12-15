@@ -23,7 +23,8 @@ def load_file(event=None):
     #canvas.create_image(200, 150, image=img1)
     # call the model on it / the action we want
 
-
+# rewrite extract_lips.py to not use face_recognition
+# check if certain emotions often get switched from what they should be
 def capture():
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
