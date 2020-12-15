@@ -26,7 +26,8 @@ if not os.path.exists(faceFolderName):
 
 with closing(VideoSequence(latest_file)) as frames:
     for idx, frame in enumerate(frames[:]):
-        print(str(56730+idx)+" frames. That's "+str((56730+idx)/1800.0)+" minutes.")
+        print(str(56730+idx)+" frames. That's " +
+              str((56730+idx)/1800.0)+" minutes.")
         filename = folderName+"/"+"frame{:04d}.jpg".format(56730+idx)
         frame.rotate(180).save(filename)
 

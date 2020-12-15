@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class Gui extends JFrame {
@@ -54,6 +55,11 @@ public class Gui extends JFrame {
 		JButton btnNewButton_1 = new JButton();
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Process p = Runtime.getRuntime().exec("python app.py");
+				} catch (IOException e) {
+					System.out.print("failed");
+				}
 			}
 		});
 		btnNewButton_1.setText("<html><center>" + "Read Lips" + "</center></html>");
