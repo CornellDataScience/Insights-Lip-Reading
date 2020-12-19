@@ -6,6 +6,8 @@ import shutil
 margin = 10
 maxWidth = 0
 maxHeight = 0
+list_orig = os.listdir("data")  # dir is your directory path
+number_files_orig = len(list_orig)
 
 try:
     # creating a folder named data
@@ -16,7 +18,7 @@ try:
 except OSError:
     print('Error: Creating directory of data_mouth')
 
-for i in range(0, 137):
+for i in range(0, number_files_orig):
     image = face_recognition.load_image_file("data/frame"+str(i)+".jpg")
     face_landmarks_list = face_recognition.face_landmarks(image)
 
@@ -51,9 +53,9 @@ for i in range(0, 137):
         print("FINISHED IMAGE. Maximum dimensions are " +
               str(maxWidth)+" x "+str(maxHeight))
 
-list_orig = os.listdir("data")  # dir is your directory path
+# list_orig = os.listdir("data")  # dir is your directory path
 list_mouth = os.listdir("data_mouth")
-number_files_orig = len(list_orig)
+# number_files_orig = len(list_orig)
 number_files_mouth = len(list_mouth)
 if(number_files_mouth != number_files_orig):
     shutil.rmtree("data")

@@ -7,7 +7,8 @@ import face_recognition
 import subprocess
 
 folderNumber = "3"
-
+# rewrite this without using face recognition
+# check slack for the face recognition article
 """if not os.path.exists(folderNumber):
     os.makedirs(folderNumber)
 list_of_files = glob.glob(folderNumber+'/*') # * means all if need specific format then *.csv

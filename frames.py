@@ -1,11 +1,14 @@
 # Importing all necessary libraries
 import cv2
 import os
-
+import tkinter
+from tkinter import *
+from tkinter import filedialog
 # video = ""
 # Make a folder dependent on the name of each video
 # Read the video from specified path
-cam = cv2.VideoCapture("test.mp4")
+filename = filedialog.askopenfilename()
+cam = cv2.VideoCapture(filename)
 
 try:
 
