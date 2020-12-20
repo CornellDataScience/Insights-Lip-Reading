@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  /* set the CSS */
+
+  .line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
+  }
+
+  .tooltip {
+    fill: white;
+    stroke: #000;
+  }
+
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: .5rem;
+    background: #FFFFFF;
+    color: #313639;
+    border: 1px solid #313639;
+    border-radius: 8px;
+    pointer-events: none;
+    font-size: 1.3rem;
+  }
+
+  .tooltip-date,
+  .tooltip-likes {
+    font-weight: bold;
+  }
+</style>
+
+<body>
+
+  <!-- load the d3.js library -->
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <div id="dataviz_builtWithD3"></div>
+  <script>
+
+
+    // Create data = list of groups
+    var allGroup = ["4 Layer CNN", "ResNet50", "VGG16"]
+    // var csv_names = ["mine40epzoomfliprotate.csv", "resnet_history.csv", "VGG_history.csv"]
+    var csv_names = ["mine40epzoomfliprotate.csv", "resnet.csv", "VGG.csv"]
+
+    // Initialize the button
+    var dropdownButton = d3.select("#dataviz_builtWithD3")
+      .append('select')
+
+    // make array of file names 
+
+    // add the options to the button
+    dropdownButton // Add a button
+      .selectAll('myOptions')
+      .data(allGroup)
+      .enter()
+      .append('option')
+      .text(function (d) { return d; }) // text showed in the menu
+      .attr("value", function (d) { console.log("this is d " + allGroup.indexOf(d)); return csv_names[allGroup.indexOf(d)]; }) // corresponding value returned by the button
+
+    var margin = { top: 70, right: 20, bottom: 100, left: 70 },
+      width = 960 - margin.left - margin.right,
+      height = 700 - margin.top - margin.bottom;
+
+    function updateChart(file) {
+      console.log("file to update chart with " + file);
+      let div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+
+
+
+      // set the ranges
+      var x = d3.scaleLinear().range([0, width]);
+      var y = d3.scaleLinear().range([height, 0]);
+
+
+      d3.select("body").select("svg").remove();
+
+      d3.csv(file).then(function (data) {
+        console.log(data);
+        console.log("FILE NAME" + file)
+
+        // format the data
+        data.forEach(function (d) {
+          d.epoch = d.epoch;
+          d.loss = +d.loss;
+          d.accuracy = +d.accuracy;
+          d.val_loss = +d.val_loss;
+          d.val_accuracy = +d.val_accuracy;
+        });
+
+
+        x.domain(d3.extent(data, function (d) { return Math.max(d.epoch); }));
+        y.domain([0, d3.max(data, function (d) {
+          return Math.max(d.accuracy, d.val_accuracy);
+        })]);
+
+        // define the 1st line
+        var valueline = d3.line()
+          .x(function (d) { return x(d.epoch); })
+          .y(function (d) { return y(d.val_accuracy); });
+
+        // define the 2nd line
+        var valueline2 = d3.line()
+          .x(function (d) { return x(d.epoch); })
+          .y(function (d) { return y(d.accuracy); });
+
+
+        var svg = d3.select("body").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+          .attr("transform",
+            "translate(" + margin.left + "," + margin.top + ")");
+
+        // Add the valueline path.
+        svg.append("path")
+          .data([data])
+          .attr("class", "line")
+          .attr("d", valueline);
+
+        // Add the valueline2 path.
+        svg.append("path")
+          .data([data])
+          .attr("class", "line")
+          .style("stroke", "red")
+          .attr("d", valueline2)
+          ;
+
+        // Add the X Axis
+        svg.append("g")
+          .attr("transform", "translate(0," + height + ")")
+          .call(d3.axisBottom(x));
+
+        // Add the Y Axis
+        svg.append("g")
+          // .call(d3.axisLeft(y))
+          .transition()
+          .duration(1000)
+          .call(d3.axisLeft(y));
+
+        // Add X axis label:
+        svg.append("text")
+          .attr("text-anchor", "end")
+          .attr("x", width - 400)
+          .attr("y", height + margin.top + 20)
+          .text("Num of epochs");
+
+
+        // Y axis label:
+        svg.append("text")
+          .attr("text-anchor", "end")
+          .attr("transform", "rotate(-90)")
+          .attr("y", -margin.left + 20)
+          .attr("x", -margin.top - 140)
+          .text("Accuracy Proportion")
+
+
+
+
+        svg.selectAll("circle").remove()
+        svg
+          .selectAll("indPoints")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) { return x(d.epoch) })
+          .attr("cy", function (d) { return y(d.accuracy) })//(y(data.accuracy)) })
+          .attr("r", 4)
+          .style("fill", "white")
+          .attr("stroke", "black")
+          .on("mouseover", function (d) {
+            div.transition()
+              .duration(200)
+              .style("opacity", .9);
+            div.html("Epoch: " + d.epoch + ", Accuracy: " +
+              d.accuracy)
+
+              // formatMoney(d[rating]))
+              .style("left", (d3.event.pageX) + "px")
+              .style("top", (d3.event.pageY) + "px");
+          })
+          .on("mouseout", function (d) {
+            div.transition()
+              .duration(200)
+              .style("opacity", 0);
+          })
+        // Handmade legend
+        svg.append("circle").attr("cx", 700).attr("cy", 575).attr("r", 6).style("fill", "red")
+        svg.append("circle").attr("cx", 700).attr("cy", 605).attr("r", 6).style("fill", "steelblue")
+        svg.append("text").attr("x", 720).attr("y", 575).text("training accuracy").style("font-size", "15px").attr("alignment-baseline", "middle")
+        svg.append("text").attr("x", 720).attr("y", 605).text("validation accuracy").style("font-size", "15px").attr("alignment-baseline", "middle")
+        svg
+          .selectAll("valPoints")
+          .data(data)
+          .enter()
+          .append("circle")
+          .attr("cx", function (d) { return x(d.epoch) })
+          .attr("cy", function (d) { return y(d.val_accuracy) })//(y(data.accuracy)) })
+          .attr("r", 4)
+          .style("fill", "white")
+          .attr("stroke", "black")
+          .on("mouseover", function (d) {
+            div.transition()
+              .duration(200)
+              .style("opacity", .9);
+            div.html("Epoch: " + d.epoch + ", Accuracy: " +
+              d.val_accuracy)
+              // formatMoney(d[rating]))
+              .style("left", (d3.event.pageX) + "px")
+              .style("top", (d3.event.pageY) + "px");
+          })
+          .on("mouseout", function (d) {
+            div.transition()
+              .duration(200)
+              .style("opacity", 0);
+          })
+          .transition().duration(500).attr("opacity", 1)
+        let circles = d3.selectAll("circle").data(data);
+
+      })
+    };
+    dropdownButton.on("change", function (d) {
+      // svg.selectAll("path").remove()
+
+      // recover the option that has been chosen
+      var selectedOption = d3.select(this).property("value")
+
+      // run the updateChart function with this selected option
+      console.log("selected option in dropdown " + selectedOption);
+      updateChart(selectedOption)
+    })
+
+
+  </script>
+</body>
